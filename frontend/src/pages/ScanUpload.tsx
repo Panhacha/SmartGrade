@@ -25,13 +25,13 @@ export const ScanUpload = () => {
   useEffect(() => {
     const fetchAssessments = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/assessments', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/assessments`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAssessments(response.data);
         if (response.data.length > 0) setSelectedAssessment(response.data[0].id);
 
-        const subRes = await axios.get('http://localhost:3000/subjects', {
+        const subRes = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/subjects`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSubjects(subRes.data);
@@ -63,7 +63,7 @@ export const ScanUpload = () => {
     setTimeout(async () => {
       try {
         // We'll just fetch a random student or STU1001 for demo purposes
-        const response = await axios.get('http://localhost:3000/students', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data && response.data.length > 0) {
@@ -99,7 +99,7 @@ export const ScanUpload = () => {
     });
 
     try {
-      const response = await axios.post('http://localhost:3000/scans/batch', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/scans/batch`, formData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -116,7 +116,7 @@ export const ScanUpload = () => {
     e.preventDefault();
     if (!newSubject.name || !newSubject.code) return;
     try {
-      const response = await axios.post('http://localhost:3000/subjects', newSubject, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/subjects`, newSubject, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const createdSub = response.data;
@@ -132,7 +132,7 @@ export const ScanUpload = () => {
   const handleCreateAssessment = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/assessments', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/assessments`, {
         ...newAssessment,
         max_score: Number(newAssessment.max_score),
         passing_score: Number(newAssessment.passing_score),

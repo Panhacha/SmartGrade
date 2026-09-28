@@ -11,7 +11,7 @@ export const Dashboard = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/reports/dashboard', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/reports/dashboard`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setData(response.data);

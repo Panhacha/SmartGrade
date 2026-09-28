@@ -18,7 +18,7 @@ export const AssessmentSetup = () => {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/subjects', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/subjects`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSubjects(response.data);
@@ -35,7 +35,7 @@ export const AssessmentSetup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/assessments', {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/assessments`, {
         ...formData,
         created_by: user?.id,
       }, {

@@ -13,7 +13,7 @@ export const DashboardLayout = () => {
   useEffect(() => {
     const fetchNotifs = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/reports/notifications', {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/reports/notifications`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setNotifications(res.data);

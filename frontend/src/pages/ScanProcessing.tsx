@@ -13,7 +13,7 @@ export const ScanProcessing = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/scans/${id}/status`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/scans/${id}/status`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStatus(response.data);

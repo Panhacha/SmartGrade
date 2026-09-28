@@ -26,7 +26,7 @@ export const StudentList = () => {
 
   const fetchStudents = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/students', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStudents(res.data);
@@ -43,9 +43,9 @@ export const StudentList = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://localhost:3000/students/${editingId}`, form, { headers: { Authorization: `Bearer ${token}` } });
+        await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students/${editingId}`, form, { headers: { Authorization: `Bearer ${token}` } });
       } else {
-        await axios.post('http://localhost:3000/students', form, { headers: { Authorization: `Bearer ${token}` } });
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students`, form, { headers: { Authorization: `Bearer ${token}` } });
       }
       setShowModal(false);
       setForm({ student_code: '', name: '', class_name: '', gender: '' });
@@ -64,7 +64,7 @@ export const StudentList = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:3000/students/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       fetchStudents();
     } catch (e) {
       alert('Cannot delete student. They may have existing grades or scans.');

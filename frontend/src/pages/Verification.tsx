@@ -24,7 +24,7 @@ export const Verification = () => {
 
   const fetchPending = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/verification/pending', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/verification/pending`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPendingResults(res.data);
@@ -63,7 +63,7 @@ export const Verification = () => {
     }
 
     try {
-      await axios.post(`http://localhost:3000/verification/${current.id}/approve`, {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/verification/${current.id}/approve`, {
         finalScore: parseFloat(editScore) || 0,
         finalStudentCode: editCode
       }, {
@@ -77,7 +77,7 @@ export const Verification = () => {
 
   const handleDelete = async (resultId: string) => {
     try {
-      await axios.delete(`http://localhost:3000/verification/${resultId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/verification/${resultId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchPending();
@@ -174,7 +174,7 @@ export const Verification = () => {
                   {/* Left: Image */}
                   <div className="flex-1 bg-white rounded-lg overflow-hidden flex items-center justify-center p-2 border border-slate-200 shadow-inner">
                     <img 
-                      src={`http://localhost:3000${result.ScannedPaper?.file_url || ''}`}
+                      src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${result.ScannedPaper?.file_url || ''}`}
                       alt="Scanned Paper"
                       className="max-h-48 object-contain rounded"
                       onError={(e) => {

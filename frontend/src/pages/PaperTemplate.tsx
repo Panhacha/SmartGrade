@@ -66,8 +66,8 @@ export const PaperTemplate = () => {
     const fetchData = async () => {
       try {
         const [studentRes, assessRes] = await Promise.all([
-          axios.get('http://localhost:3000/students', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:3000/assessments', { headers: { Authorization: `Bearer ${token}` } })
+          axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/assessments`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setStudents(studentRes.data);
         setAssessments(assessRes.data);

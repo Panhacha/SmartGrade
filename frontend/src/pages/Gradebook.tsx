@@ -10,7 +10,7 @@ export const Gradebook = () => {
   useEffect(() => {
     const fetchGrades = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/grades', {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/grades`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setGrades(res.data);
@@ -23,7 +23,7 @@ export const Gradebook = () => {
 
   const handleExport = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/grades/export', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/grades/export`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob'
       });

@@ -42,11 +42,11 @@ export const StudentImportModal: React.FC<StudentImportModalProps> = ({ isOpen, 
       if (importSource === 'FILE' && file) {
         const formData = new FormData();
         formData.append('file', file);
-        res = await axios.post('http://localhost:3000/students/import-file', formData, {
+        res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students/import-file`, formData, {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
         });
       } else if (importSource === 'SHEET' && sheetUrl) {
-        res = await axios.post('http://localhost:3000/students/import-google-sheet', { sheet_url: sheetUrl }, {
+        res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students/import-google-sheet`, { sheet_url: sheetUrl }, {
           headers: { Authorization: `Bearer ${token}` }
         });
       } else {
@@ -86,7 +86,7 @@ export const StudentImportModal: React.FC<StudentImportModalProps> = ({ isOpen, 
       }));
 
       // 4. Confirm Import
-      await axios.post('http://localhost:3000/students/confirm-import', { mapped_data: mappedData }, {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/students/confirm-import`, { mapped_data: mappedData }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
