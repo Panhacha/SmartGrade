@@ -184,100 +184,104 @@ export const Verification = () => {
                   </div>
                   
                   {/* Right: Form */}
-                  <div className="w-64 flex flex-col">
-                    <div className="mb-2">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">AI Confidence</span>
-                        <span className="text-[9px] font-bold text-slate-700">{Math.round((result.confidence || 0) * 100)}%</span>
+                  <div className="w-80 flex flex-col bg-white rounded-xl shadow-sm border border-slate-200 p-4 relative">
+                    {/* Confidence Bar */}
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI Confidence</span>
+                        <span className={`text-xs font-black ${hasWarnings ? 'text-amber-600' : 'text-emerald-600'}`}>{Math.round((result.confidence || 0) * 100)}%</span>
                       </div>
-                      <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                         <div 
-                          className={`h-full rounded-full ${hasWarnings ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                          className={`h-full rounded-full transition-all duration-700 ${hasWarnings ? 'bg-gradient-to-r from-amber-400 to-amber-500' : 'bg-gradient-to-r from-emerald-400 to-emerald-500'}`}
                           style={{ width: `${(result.confidence || 0) * 100}%` }}
                         />
                       </div>
                     </div>
                     
                     {hasWarnings && (
-                      <div className="mb-2 bg-amber-50 rounded-lg p-2 border border-amber-200">
-                        <h4 className="text-[9px] font-bold text-amber-800 flex items-center mb-0.5"><AlertTriangle className="w-2.5 h-2.5 mr-1"/> Warnings Detected</h4>
-                        <ul className="text-[9px] text-amber-700 space-y-0.5 pl-3 list-disc">
+                      <div className="mb-4 bg-amber-50/80 rounded-xl p-3 border border-amber-200/60">
+                        <h4 className="text-[10px] font-bold text-amber-900 flex items-center mb-1.5 uppercase tracking-wide"><AlertTriangle className="w-3 h-3 mr-1.5 text-amber-500"/> Review Needed</h4>
+                        <ul className="text-[11px] font-medium text-amber-700 space-y-1 pl-4 list-disc marker:text-amber-400">
                           {result.warnings.map((w: string, i: number) => <li key={i}>{w.replace(/_/g, ' ')}</li>)}
                         </ul>
                       </div>
                     )}
-                    <div className="flex-1 space-y-3">
+
+                    <div className="flex-1 space-y-4">
                       {/* Student Info Card */}
                       {result.ScannedPaper?.Student ? (
-                        <div className="bg-emerald-50/80 border border-emerald-100 rounded-lg p-2.5 shadow-sm">
-                           <div className="flex items-center justify-between mb-1.5">
-                              <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wide">Matched Student</span>
-                              <span className="text-[9px] font-bold bg-emerald-200/50 text-emerald-700 px-1.5 py-0.5 rounded">
+                        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100/60 rounded-xl p-3.5 shadow-sm">
+                           <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100/50">
+                              <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider flex items-center"><Check className="w-3 h-3 mr-1"/> Matched Student</span>
+                              <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md">
                                 {result.ScannedPaper.Student.class_name} {result.ScannedPaper.Student.section ? `- ${result.ScannedPaper.Student.section}` : ''}
                               </span>
                            </div>
-                           <div className="space-y-1">
+                           <div className="space-y-1.5">
                               <div className="flex items-center gap-2">
-                                <span className="text-sm font-black text-emerald-900 truncate">
+                                <span className="text-base font-black text-emerald-950 truncate">
                                   {result.ScannedPaper.Student.khmer_name || result.ScannedPaper.Student.name}
                                 </span>
                                 {result.ScannedPaper.Student.gender && (
-                                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full uppercase">
+                                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100/80 px-2 py-0.5 rounded-md uppercase">
                                     {result.ScannedPaper.Student.gender}
                                   </span>
                                 )}
                               </div>
-                              <div className="text-[10px] text-emerald-700 font-medium grid grid-cols-2 gap-1">
-                                 {result.ScannedPaper.Student.khmer_name && <span className="truncate">Eng: {result.ScannedPaper.Student.name}</span>}
-                                 {result.ScannedPaper.Student.email && <span className="truncate col-span-2">Email: {result.ScannedPaper.Student.email}</span>}
+                              <div className="text-xs text-emerald-700/80 font-medium grid grid-cols-2 gap-1.5">
+                                 {result.ScannedPaper.Student.khmer_name && <span className="truncate" title={result.ScannedPaper.Student.name}>En: {result.ScannedPaper.Student.name}</span>}
+                                 {result.ScannedPaper.Student.email && <span className="truncate col-span-2" title={result.ScannedPaper.Student.email}>✉ {result.ScannedPaper.Student.email}</span>}
                               </div>
                            </div>
                         </div>
                       ) : (
-                        <div className="bg-rose-50 border border-rose-100 rounded-lg p-2.5 shadow-sm">
-                           <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-bold text-rose-800 uppercase tracking-wide">Matched Student</span>
-                              <span className="text-[9px] font-bold bg-rose-200/50 text-rose-700 px-1.5 py-0.5 rounded">Not Found</span>
+                        <div className="bg-rose-50/80 border border-rose-100 rounded-xl p-3.5 shadow-sm">
+                           <div className="flex items-center justify-between mb-2 pb-2 border-b border-rose-100/50">
+                              <span className="text-[10px] font-bold text-rose-800 uppercase tracking-wider flex items-center"><AlertTriangle className="w-3 h-3 mr-1"/> Unknown Student</span>
+                              <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md">Not Found</span>
                            </div>
-                           <p className="text-[10px] text-rose-600 mt-1 leading-tight">
-                             No student found for this ID. Please correct the ID below.
+                           <p className="text-[11px] font-medium text-rose-600 mt-1 leading-relaxed">
+                             We couldn't find a student with this ID. Please check the scan and correct the ID below.
                            </p>
                         </div>
                       )}
 
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-700 mb-1 uppercase tracking-wide">Student ID</label>
-                        <input 
-                          type="text" 
-                          value={editCode} 
-                          onChange={e => setEditCode(e.target.value)}
-                          className="w-full px-2 py-1.5 text-xs font-bold rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-900 uppercase transition-all shadow-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-700 mb-0.5 uppercase tracking-wide">Score</label>
-                        <input 
-                          type="number" 
-                          value={editScore} 
-                          onChange={e => setEditScore(e.target.value)}
-                          className="w-full px-2 py-1.5 text-lg font-black rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-blue-600 transition-all shadow-sm"
-                        />
+                      <div className="space-y-3.5 bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Student ID</label>
+                          <input 
+                            type="text" 
+                            value={editCode} 
+                            onChange={e => setEditCode(e.target.value)}
+                            className="w-full px-3 py-2 text-sm font-bold rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none bg-white text-slate-900 uppercase transition-all shadow-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Score</label>
+                          <input 
+                            type="number" 
+                            value={editScore} 
+                            onChange={e => setEditScore(e.target.value)}
+                            className="w-full px-3 py-2 text-xl font-black rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none bg-white text-indigo-600 transition-all shadow-sm"
+                          />
+                        </div>
                       </div>
                     </div>
                     
-                    <div className="pt-3 mt-2 border-t border-slate-200 flex space-x-2">
+                    <div className="pt-4 mt-4 border-t border-slate-100 flex gap-2">
                        <button 
                          onClick={handleApprove}
-                         className="flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20"
+                         className="flex-1 flex items-center justify-center py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 transition-all shadow-md shadow-indigo-500/20 hover:-translate-y-0.5"
                        >
-                         <Check className="w-3.5 h-3.5 mr-1" /> Verify
+                         <Check className="w-4 h-4 mr-1.5" /> Confirm & Verify
                        </button>
                        <button 
                          onClick={() => setDeleteTargetId(result.id)}
-                         className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-colors"
+                         className="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition-colors shadow-sm"
                          title="Reject Scan"
                        >
-                         <Trash2 className="w-3.5 h-3.5" />
+                         <Trash2 className="w-4 h-4" />
                        </button>
                     </div>
                   </div>
