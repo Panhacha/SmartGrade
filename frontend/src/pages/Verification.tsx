@@ -170,28 +170,28 @@ export const Verification = () => {
 
               {/* Expanded Content (Accordion) */}
               {isActive && (
-                <div className="bg-slate-50 border-t border-blue-500/20 p-4 flex gap-4 text-slate-800 animate-fade-in relative z-0">
+                <div className="bg-slate-50/80 border-t border-blue-500/20 p-3 flex items-start gap-4 text-slate-800 animate-fade-in relative z-0">
                   {/* Left: Image */}
-                  <div className="flex-1 bg-white rounded-lg overflow-hidden flex items-center justify-center p-2 border border-slate-200 shadow-inner">
+                  <div className="flex-1 bg-white rounded-lg overflow-hidden flex items-center justify-center p-2 border border-slate-200 shadow-sm self-stretch max-h-64">
                     <img 
                       src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${result.ScannedPaper?.file_url || ''}`}
                       alt="Scanned Paper"
-                      className="max-h-48 object-contain rounded"
+                      className="w-full h-full object-contain rounded"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://placehold.co/600x800/e2e8f0/475569?text=Image+Not+Found';
+                        (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/475569?text=Image+Not+Found';
                       }}
                     />
                   </div>
                   
                   {/* Right: Form */}
-                  <div className="w-80 flex flex-col bg-white rounded-xl shadow-sm border border-slate-200 p-4 relative">
+                  <div className="w-72 flex flex-col bg-white rounded-lg shadow-sm border border-slate-200 p-3 relative shrink-0">
                     {/* Confidence Bar */}
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI Confidence</span>
-                        <span className={`text-xs font-black ${hasWarnings ? 'text-amber-600' : 'text-emerald-600'}`}>{Math.round((result.confidence || 0) * 100)}%</span>
+                    <div className="mb-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">AI Confidence</span>
+                        <span className={`text-[10px] font-black ${hasWarnings ? 'text-amber-500' : 'text-emerald-500'}`}>{Math.round((result.confidence || 0) * 100)}%</span>
                       </div>
-                      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                      <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
                         <div 
                           className={`h-full rounded-full transition-all duration-700 ${hasWarnings ? 'bg-gradient-to-r from-amber-400 to-amber-500' : 'bg-gradient-to-r from-emerald-400 to-emerald-500'}`}
                           style={{ width: `${(result.confidence || 0) * 100}%` }}
@@ -200,88 +200,85 @@ export const Verification = () => {
                     </div>
                     
                     {hasWarnings && (
-                      <div className="mb-4 bg-amber-50/80 rounded-xl p-3 border border-amber-200/60">
-                        <h4 className="text-[10px] font-bold text-amber-900 flex items-center mb-1.5 uppercase tracking-wide"><AlertTriangle className="w-3 h-3 mr-1.5 text-amber-500"/> Review Needed</h4>
-                        <ul className="text-[11px] font-medium text-amber-700 space-y-1 pl-4 list-disc marker:text-amber-400">
+                      <div className="mb-3 bg-amber-50 rounded-lg p-2 border border-amber-100">
+                        <h4 className="text-[9px] font-bold text-amber-800 flex items-center mb-1 uppercase tracking-wide"><AlertTriangle className="w-2.5 h-2.5 mr-1 text-amber-500"/> Review Needed</h4>
+                        <ul className="text-[10px] font-medium text-amber-700 space-y-0.5 pl-4 list-disc marker:text-amber-400">
                           {result.warnings.map((w: string, i: number) => <li key={i}>{w.replace(/_/g, ' ')}</li>)}
                         </ul>
                       </div>
                     )}
 
-                    <div className="flex-1 space-y-4">
+                    <div className="flex-1 space-y-3">
                       {/* Student Info Card */}
                       {result.ScannedPaper?.Student ? (
-                        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100/60 rounded-xl p-3.5 shadow-sm">
-                           <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100/50">
-                              <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider flex items-center"><Check className="w-3 h-3 mr-1"/> Matched Student</span>
-                              <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md">
+                        <div className="bg-emerald-50/50 border border-emerald-100/60 rounded-lg p-2.5">
+                           <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-emerald-100/50">
+                              <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-wider flex items-center"><Check className="w-2.5 h-2.5 mr-1"/> Matched</span>
+                              <span className="text-[9px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">
                                 {result.ScannedPaper.Student.class_name} {result.ScannedPaper.Student.section ? `- ${result.ScannedPaper.Student.section}` : ''}
                               </span>
                            </div>
-                           <div className="space-y-1.5">
-                              <div className="flex items-center gap-2">
-                                <span className="text-base font-black text-emerald-950 truncate">
-                                  {result.ScannedPaper.Student.khmer_name || result.ScannedPaper.Student.name}
-                                </span>
-                                {result.ScannedPaper.Student.gender && (
-                                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100/80 px-2 py-0.5 rounded-md uppercase">
-                                    {result.ScannedPaper.Student.gender}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-xs text-emerald-700/80 font-medium grid grid-cols-2 gap-1.5">
-                                 {result.ScannedPaper.Student.khmer_name && <span className="truncate" title={result.ScannedPaper.Student.name}>En: {result.ScannedPaper.Student.name}</span>}
-                                 {result.ScannedPaper.Student.email && <span className="truncate col-span-2" title={result.ScannedPaper.Student.email}>✉ {result.ScannedPaper.Student.email}</span>}
-                              </div>
+                           <div className="flex items-center gap-1.5 mb-1">
+                             <span className="text-sm font-black text-emerald-950 truncate">
+                               {result.ScannedPaper.Student.khmer_name || result.ScannedPaper.Student.name}
+                             </span>
+                             {result.ScannedPaper.Student.gender && (
+                               <span className="text-[9px] font-bold text-emerald-600 bg-emerald-100/80 px-1.5 py-0.5 rounded uppercase">
+                                 {result.ScannedPaper.Student.gender}
+                               </span>
+                             )}
+                           </div>
+                           <div className="text-[10px] text-emerald-700/80 font-medium truncate" title={result.ScannedPaper.Student.name}>
+                             {result.ScannedPaper.Student.name}
                            </div>
                         </div>
                       ) : (
-                        <div className="bg-rose-50/80 border border-rose-100 rounded-xl p-3.5 shadow-sm">
-                           <div className="flex items-center justify-between mb-2 pb-2 border-b border-rose-100/50">
-                              <span className="text-[10px] font-bold text-rose-800 uppercase tracking-wider flex items-center"><AlertTriangle className="w-3 h-3 mr-1"/> Unknown Student</span>
-                              <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md">Not Found</span>
+                        <div className="bg-rose-50/50 border border-rose-100 rounded-lg p-2.5">
+                           <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-rose-100/50">
+                              <span className="text-[9px] font-bold text-rose-700 uppercase tracking-wider flex items-center"><AlertTriangle className="w-2.5 h-2.5 mr-1"/> Unknown</span>
+                              <span className="text-[9px] font-bold bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded">Not Found</span>
                            </div>
-                           <p className="text-[11px] font-medium text-rose-600 mt-1 leading-relaxed">
-                             We couldn't find a student with this ID. Please check the scan and correct the ID below.
+                           <p className="text-[10px] font-medium text-rose-600 leading-tight">
+                             No match found.
                            </p>
                         </div>
                       )}
 
-                      <div className="space-y-3.5 bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Student ID</label>
+                      <div className="flex gap-2">
+                        <div className="flex-1">
+                          <label className="block text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Student ID</label>
                           <input 
                             type="text" 
                             value={editCode} 
                             onChange={e => setEditCode(e.target.value)}
-                            className="w-full px-3 py-2 text-sm font-bold rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none bg-white text-slate-900 uppercase transition-all shadow-sm"
+                            className="w-full px-2 py-1.5 text-xs font-bold rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none bg-slate-50 text-slate-900 uppercase transition-all"
                           />
                         </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Score</label>
+                        <div className="w-20">
+                          <label className="block text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Score</label>
                           <input 
                             type="number" 
                             value={editScore} 
                             onChange={e => setEditScore(e.target.value)}
-                            className="w-full px-3 py-2 text-xl font-black rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none bg-white text-indigo-600 transition-all shadow-sm"
+                            className="w-full px-2 py-1.5 text-sm font-black rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none bg-blue-50/50 text-blue-600 transition-all text-center"
                           />
                         </div>
                       </div>
                     </div>
                     
-                    <div className="pt-4 mt-4 border-t border-slate-100 flex gap-2">
+                    <div className="pt-3 mt-3 border-t border-slate-100 flex gap-2">
                        <button 
                          onClick={handleApprove}
-                         className="flex-1 flex items-center justify-center py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 transition-all shadow-md shadow-indigo-500/20 hover:-translate-y-0.5"
+                         className="flex-1 flex items-center justify-center py-1.5 rounded-lg text-[11px] font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-sm"
                        >
-                         <Check className="w-4 h-4 mr-1.5" /> Confirm & Verify
+                         <Check className="w-3 h-3 mr-1" /> Confirm
                        </button>
                        <button 
                          onClick={() => setDeleteTargetId(result.id)}
-                         className="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition-colors shadow-sm"
+                         className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition-colors"
                          title="Reject Scan"
                        >
-                         <Trash2 className="w-4 h-4" />
+                         <Trash2 className="w-3.5 h-3.5" />
                        </button>
                     </div>
                   </div>
