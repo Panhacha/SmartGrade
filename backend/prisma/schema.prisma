@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  role       String   @default("TEACHER")
+  created_at DateTime @default(now())
+
+  VerificationLogs VerificationLog[]
+}
+
+model Student {
+  id            String   @id @default(uuid())
+  student_code  String   @unique
+  name          String
+  khmer_name    String?
+  gender        String?
+  class_name    String
+  section       String?
+  academic_year String?
+  email         String?
+  phone         String?
+  import_source String   @default("MANUAL") // EXCEL, CSV, GOOGLE_SHEET, MANUAL
+  status        String   @default("ACTIVE")
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  ScannedPapers ScannedPaper[]
+  Grades        Grade[]
+}
+
+model Subject {
+  id   String @id @default(uuid())
+  name String
+  code String @unique
+
+  Assessments Assessment[]
+}
+
+model Assessment {
+  id            String   @id @default(uuid())
+  name          String
+  subject_id    String
+  class_name    String
+  max_score     Float
+  passing_score Float
+  exam_date     DateTime
+  created_by    String
+
+  Subject     Subject     @relation(fields: [subject_id], references: [id])
+  ScanBatches ScanBatch[]
+  Grades      Grade[]
+}
+
+model ScanBatch {
+  id              String   @id @default(uuid())
+  assessment_id   String
+  total_files     Int      @default(0)
+  processed_files Int      @default(0)
+  status          String   @default("PENDING")
+  created_by      String
+  created_at      DateTime @default(now())
+
+  Assessment    Assessment     @relation(fields: [assessment_id], references: [id])
+  ScannedPapers ScannedPaper[]
+}
+
+model ScannedPaper {
+  id         String   @id @default(uuid())
+  batch_id   String
+  file_url   String
+  student_id String?
+  status     String   @default("PENDING")
+  created_at DateTime @default(now())
+
+  ScanBatch         ScanBatch          @relation(fields: [batch_id], references: [id])
+  Student           Student?           @relation(fields: [student_id], references: [id])
+  RecognizedResults RecognizedResult[]
+}
+
+model RecognizedResult {
+  id                    String @id @default(uuid())
+  paper_id              String
+  detected_student_code String?
+  detected_score        Float?
+  confidence            Float?
+  raw_text              String?
+  status                String @default("PENDING")
+
+  ScannedPaper ScannedPaper @relation(fields: [paper_id], references: [id])
+}
+
+model Grade {
+  id            String    @id @default(uuid())
+  assessment_id String
+  student_id    String
+  score         Float
+  percentage    Float
+  status        String    @default("PENDING")
+  verified_by   String?
+  verified_at   DateTime?
+
+  Assessment       Assessment        @relation(fields: [assessment_id], references: [id])
+  Student          Student           @relation(fields: [student_id], references: [id])
+  VerificationLogs VerificationLog[]
+}
+
+model VerificationLog {
+  id         String   @id @default(uuid())
+  grade_id   String
+  old_score  Float?
+  new_score  Float
+  action     String
+  user_id    String
+  created_at DateTime @default(now())
+
+  Grade Grade @relation(fields: [grade_id], references: [id])
+  User  User  @relation(fields: [user_id], references: [id])
+}
